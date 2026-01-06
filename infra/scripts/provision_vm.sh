@@ -17,5 +17,5 @@ sudo apt-get install -y nodejs
 
 echo "==> Done. Next:"
 echo "  1) git clone your repo into $REPO_DIR"
-echo "  2) create $REPO_DIR/.env"
-echo "  3) run infra/scripts/deploy.sh"
+echo "  2) downloaded dependencies"
+# echo "  3) run infra/scripts/deploy.sh"
