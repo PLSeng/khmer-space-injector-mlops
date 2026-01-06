@@ -1,0 +1,19 @@
+# --- Core API ---
+fastapi
+uvicorn[standard]
+
+# --- Data validation ---
+pydantic
+
+# --- Testing ---
+pytest
+
+# --- Env loading ---
+python-dotenv
+
+# --- Database ---
+sqlalchemy
+psycopg[binary]
+
+# --- ML runtime ---
+torch
