@@ -1,0 +1,37 @@
+{
+  "task": "khmer_word_segmentation",
+  "model": {
+    "framework": "pytorch",
+    "arch": "lstm",
+    "bidirectional": true,
+    "embedding_dim": 128,
+    "hidden_dim": 256,
+    "num_layers": 2,
+    "dropout": 0.2
+  },
+  "sequence": {
+    "max_len": 128,
+    "pad_token": "<PAD>",
+    "unk_token": "<UNK>",
+    "bos_token": "<BOS>",
+    "eos_token": "<EOS>"
+  },
+  "labels": {
+    "space_label": 1,
+    "nospace_label": 0
+  },
+  "preprocess": {
+    "lowercase": false,
+    "strip": true,
+    "collapse_spaces": true,
+    "normalize_unicode": "NFC"
+  },
+  "decode": {
+    "insert_space_on_label": 1,
+    "preserve_existing_spaces": false
+  },
+  "runtime": {
+    "device_preference": "cpu",
+    "torch_num_threads": 1
+  }
+}
