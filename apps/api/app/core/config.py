@@ -1,13 +1,10 @@
-from typing import List
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-_PROJECT_ROOT = Path(__file__).resolve().parents[4]
-_ENV_PATH = (_PROJECT_ROOT / ".env").resolve()
+from typing import List
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=str(_ENV_PATH),
+        env_file=".env",      # will be provided by docker compose env_file too
         env_file_encoding="utf-8",
         extra="ignore",
     )
@@ -17,26 +14,27 @@ class Settings(BaseSettings):
     LOG_LEVEL: str = "INFO"
 
     CORS_ORIGINS: str = "http://localhost:5173"
-    DATABASE_URL: str
+
+    DATABASE_URL: str | None = None
 
     ARTIFACT_DIR: str = "artifacts"
     MAX_LEN: int = 128
     MAX_TEXT_CHARS: int = 200_000
     DEVICE: str = "cpu"
 
-    ENABLE_DB_LOGGING: bool = True  
-    ENABLE_HEALTH_DB_CHECK: bool = True
-    HOST: str = "127.0.0.1"
-    PORT: int = 8000
-
-
     @property
     def cors_origins_list(self) -> List[str]:
         return [x.strip() for x in self.CORS_ORIGINS.split(",") if x.strip()]
 
     @property
+    def api_root(self) -> Path:
+        # config.py is apps/api/app/core/config.py
+        # parents[2] => apps/api/app
+        return Path(__file__).resolve().parents[2]
+
+    @property
     def artifact_path(self) -> Path:
-        api_root = Path(__file__).resolve().parents[2]
-        return (api_root / self.ARTIFACT_DIR).resolve()
+        # artifacts folder at apps/api/artifacts
+        return (self.api_root.parent / self.ARTIFACT_DIR).resolve()
 
 settings = Settings()

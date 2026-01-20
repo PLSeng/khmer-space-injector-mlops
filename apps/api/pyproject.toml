@@ -15,6 +15,7 @@ dependencies = [
   "python-dotenv",
   "sqlalchemy",
   "psycopg[binary]",
+  "psycopg2",
   "httpx",
   "pytest",
   "torch",
