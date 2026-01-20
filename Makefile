@@ -24,7 +24,10 @@ help:
 # -------------------------
 
 api-install:
-	cd apps/api && python -m pip install --upgrade pip && pip install -r requirements.txt
+	python -m pip install --upgrade pip
+	conda install -y -c conda-forge numpy scipy scikit-learn
+	pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+	pip install -r ./apps/api/requirements.txt
 
 api-test:
 	cd apps/api && pytest

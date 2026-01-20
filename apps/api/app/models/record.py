@@ -1,15 +1,11 @@
-import uuid
-from sqlalchemy import Text, DateTime, func
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import BigInteger, Text, DateTime, func
+from sqlalchemy.orm import Mapped, mapped_column
+from app.db.session import Base
 
-class Base(DeclarativeBase):
-    pass
+class Record(Base):
+    __tablename__ = "records"
 
-class SegmentRecord(Base):
-    __tablename__ = "segment_records"
-
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True, index=True)
     input_text: Mapped[str] = mapped_column(Text, nullable=False)
     output_text: Mapped[str] = mapped_column(Text, nullable=False)
-    created_at: Mapped[str] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    created_at: Mapped[object] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)

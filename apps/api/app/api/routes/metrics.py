@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Response
-from prometheus_client import generate_latest
+from fastapi import APIRouter
+from app.core.metrics import metrics
 
 router = APIRouter()
 
 @router.get("/metrics")
-def metrics():
-    return Response(generate_latest(), media_type="text/plain")
+def get_metrics():
+    return metrics.snapshot()

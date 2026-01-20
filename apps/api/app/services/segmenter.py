@@ -11,9 +11,11 @@ import torch
 
 from app.core.config import settings
 from app.services.artifacts import load_vocab
-from app.services.utils import chunk_text, decode_spaces
+from app.services.utils import decode_spaces
 from app.services.net import KhmerRNN
 
+def chunk_text(text: str, max_len: int) -> List[str]:
+    return [text[i : i + max_len] for i in range(0, len(text), max_len)]
 
 def _load_config(config_path: Path) -> Dict[str, Any]:
     if not config_path.is_file():
