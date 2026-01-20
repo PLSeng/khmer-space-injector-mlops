@@ -1,7 +1,21 @@
-export async function fetchHistory() {
-  const res = await fetch("/api/history");
+// src/features/history/historyApi.ts
+
+export type HistoryItem = {
+  id: number | string;
+  input: string;
+  output: string;
+};
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+export async function fetchHistory(): Promise<HistoryItem[]> {
+  const res = await fetch(`${API_BASE}/api/history`);
+
   if (!res.ok) {
-    throw new Error("History request failed");
+    const msg = await res.text().catch(() => "");
+    throw new Error(msg || `HTTP ${res.status}`);
   }
-  return res.json();
+
+  const data = await res.json();
+  return Array.isArray(data) ? data : [];
 }
