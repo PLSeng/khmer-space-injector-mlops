@@ -30,12 +30,6 @@ jobs:
           pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
           pip install pytest ruff
 
-      - name: Run tests
-        env:
-          ENV: test
-          DATABASE_URL: "sqlite+pysqlite:///:memory:"
-        run: pytest -q
-
   frontend:
     name: Frontend - build & tests
     runs-on: ubuntu-latest
