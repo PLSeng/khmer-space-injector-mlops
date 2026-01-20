@@ -1,13 +1,12 @@
 from fastapi import APIRouter, Depends
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import Session
 from sqlalchemy import text
 
-from app.db.session import get_db
+from app.api.deps import get_db
 
 router = APIRouter()
 
 @router.get("/health")
-async def health(db: AsyncSession = Depends(get_db)):
-    # quick DB ping
-    await db.execute(text("SELECT 1"))
+def health(db: Session = Depends(get_db)):
+    db.execute(text("SELECT 1"))
     return {"ok": True}

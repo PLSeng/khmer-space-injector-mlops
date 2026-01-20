@@ -4,7 +4,8 @@ uvicorn[standard]
 httpx
 
 # --- Data validation ---
-pydantic
+pydantic>=2
+pydantic-settings>=2
 
 # --- Testing ---
 pytest
@@ -13,8 +14,6 @@ pytest
 python-dotenv
 
 # --- Database ---
-sqlalchemy
+sqlalchemy>=2
 psycopg[binary]
-
-# --- ML runtime ---
-torch
+psycopg2

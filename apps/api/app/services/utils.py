@@ -9,9 +9,13 @@ _KHMER_COMBINING = {
 }
 
 
-def decode_spaces(text: str, pred_labels: list[int]) -> str:
+def decode_spaces(
+    text: str,
+    pred_labels: list[int],
+    insert_on_label: int = 1,
+) -> str:
     """
-    label=1 means insert a space AFTER this character.
+    insert_on_label means: insert a space AFTER this character when label == insert_on_label.
     Avoid inserting spaces before Khmer combining marks to not split grapheme clusters.
     """
     out: list[str] = []
@@ -21,7 +25,7 @@ def decode_spaces(text: str, pred_labels: list[int]) -> str:
         ch = text[i]
         out.append(ch)
 
-        if pred_labels[i] != 1:
+        if pred_labels[i] != insert_on_label:
             continue
 
         # If next codepoint is combining, don't insert a space
@@ -29,5 +33,9 @@ def decode_spaces(text: str, pred_labels: list[int]) -> str:
             continue
 
         out.append(" ")
+
+    # if text longer than labels, append remaining
+    if len(text) > n:
+        out.append(text[n:])
 
     return "".join(out).strip()
