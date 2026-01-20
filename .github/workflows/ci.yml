@@ -33,8 +33,8 @@ jobs:
       - name: Run tests
         env:
           ENV: test
+          DATABASE_URL: "sqlite+pysqlite:///:memory:"
         run: pytest -q
-
 
   frontend:
     name: Frontend - build & tests
