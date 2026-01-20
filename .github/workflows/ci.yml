@@ -3,51 +3,72 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: ["main"]
 
 jobs:
-  api-tests:
-    name: API tests (pytest)
+  api:
+    name: API - lint & tests
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: apps/api
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-          cache-dependency-path: apps/api/requirements.txt
+          cache: "pip"
+          cache-dependency-path: |
+            apps/api/requirements.txt
+            apps/api/pyproject.toml
 
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m pip install -U pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          if [ -f pyproject.toml ]; then pip install .; fi
+          pip install pytest ruff
 
-      - name: Show artifacts folder (debug)
-        run: |
-          echo "Working dir: $(pwd)"
-          ls -la
-          ls -la artifacts || true
+      - name: Lint (ruff)
+        run: ruff check .
 
-      - name: Run pytest
+      - name: Run tests
         env:
-          # Use same scheme as SQLAlchemy + psycopg
-          DATABASE_URL: "postgresql+psycopg://fake:fake@localhost:5432/fake"
+          ENV: test
+          # If your tests require a DB, you can skip integration tests in CI:
+          # DATABASE_URL: ""
+        run: pytest -q
 
-          # CI runs in apps/api, so paths are relative to that folder
-          MODEL_CHECKPOINT_PATH: "artifacts/checkpoint.pt"
-          VOCAB_PATH: "artifacts/vocab.json"
-          MODEL_CONFIG_PATH: "artifacts/config.json"
+  frontend:
+    name: Frontend - build & tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/frontend
 
-          DEVICE: "cpu"
-          TORCH_NUM_THREADS: "1"
-          MAX_TEXT_LENGTH: "3000"
-          ENABLE_RECORD_LOGGING: "false"
-          ENABLE_HEALTH_DB_CHECK: "false"
-        run: pytest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: apps/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck (optional)
+        run: |
+          if npm run | grep -q "typecheck"; then npm run typecheck; else echo "No typecheck script"; fi
+
+      - name: Run tests (optional)
+        run: |
+          if npm run | grep -q "test"; then npm test; else echo "No tests"; fi
+
+      - name: Build
+        run: npm run build
