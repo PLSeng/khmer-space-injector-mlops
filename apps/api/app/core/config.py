@@ -1,4 +1,5 @@
 from pathlib import Path
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import List
 
@@ -21,6 +22,8 @@ class Settings(BaseSettings):
     MAX_LEN: int = 128
     MAX_TEXT_CHARS: int = 200_000
     DEVICE: str = "cpu"
+
+    ENABLE_DB_LOGGING: bool = Field(default=False)
 
     @property
     def cors_origins_list(self) -> List[str]:

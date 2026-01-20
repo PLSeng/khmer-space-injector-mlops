@@ -5,6 +5,8 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ../.env
+    volumes:
+      - ../apps/api/artifacts:/artifacts:ro
     restart: unless-stopped
 
   frontend:

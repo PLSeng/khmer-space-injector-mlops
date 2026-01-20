@@ -8,7 +8,6 @@ from app.core.config import settings
 
 app = FastAPI(title="Khmer Space Injector API")
 
-# ✅ ADD THIS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,  # from .env
