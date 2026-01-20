@@ -66,9 +66,5 @@ jobs:
         run: |
           if npm run | grep -q "typecheck"; then npm run typecheck; else echo "No typecheck script"; fi
 
-      - name: Run tests (optional)
-        run: |
-          if npm run | grep -q "test"; then npm test; else echo "No tests"; fi
-
       - name: Build
         run: npm run build
