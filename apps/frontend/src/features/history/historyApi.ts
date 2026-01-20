@@ -1,12 +1,7 @@
-import { apiFetch } from "../../lib/api";
-
-export interface HistoryItem {
-  id: string;
-  input: string;
-  output: string;
-  createdAt?: string;
-}
-
-export function fetchHistory(): Promise<HistoryItem[]> {
-  return apiFetch<HistoryItem[]>("/history", { method: "GET" });
+export async function fetchHistory() {
+  const res = await fetch("/api/history");
+  if (!res.ok) {
+    throw new Error("History request failed");
+  }
+  return res.json();
 }
