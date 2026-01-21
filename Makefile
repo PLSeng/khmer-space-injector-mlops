@@ -29,7 +29,7 @@ deploy:
 	docker compose -f infra/docker-compose.yml ps
 
 provision-vm:
-	@set -euo pipefail; \
+	@set -eu; \
 	sudo apt-get update; \
 	sudo apt-get install -y nginx ca-certificates curl gnupg; \
 	\
