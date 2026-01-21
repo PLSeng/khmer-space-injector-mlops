@@ -41,6 +41,10 @@ ps:
 logs:
 	$(COMPOSE) logs -f
 
+clean-docker:
+	docker system prune
+	docker builder prune
+
 # First-time SSL issuance (run once)
 ssl:
 	$(COMPOSE) run --rm certbot certonly \
