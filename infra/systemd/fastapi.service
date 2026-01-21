@@ -1,0 +1,21 @@
+[Unit]
+Description=Khmer Space Injector FastAPI
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+
+WorkingDirectory=/home/ubuntu/khmer-space-injector-mlops/apps/api
+EnvironmentFile=/home/ubuntu/khmer-space-injector-mlops/.env
+
+ExecStart=/home/ubuntu/khmer-space-injector-mlops/.venv/bin/uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+Restart=always
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

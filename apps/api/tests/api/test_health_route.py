@@ -1,0 +1,5 @@
+# tests/api/test_health_route.py
+def test_health(client):
+    r = client.get("/health")
+    assert r.status_code == 200
+    assert r.json().get("ok") is True

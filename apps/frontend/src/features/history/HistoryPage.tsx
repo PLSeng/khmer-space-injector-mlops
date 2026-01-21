@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { fetchHistory, HistoryItem } from "./historyApi.ts";
+
 import "./HistoryPage.css";
 
 export default function HistoryPage() {

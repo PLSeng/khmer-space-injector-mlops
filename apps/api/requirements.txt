@@ -1,0 +1,19 @@
+# --- Core API ---
+fastapi
+uvicorn[standard]
+httpx
+
+# --- Data validation ---
+pydantic>=2
+pydantic-settings>=2
+
+# --- Testing ---
+pytest
+
+# --- Env loading ---
+python-dotenv
+
+# --- Database ---
+sqlalchemy>=2
+psycopg[binary]
+psycopg2

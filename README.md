@@ -47,8 +47,10 @@ khmer-space-injector-mlops/
 │     │  │     └─ record_repo.py
 │     │  └─ services/
 │     │     ├─ segmenter.py                     # loads model + inference
-│     │     ├─ artifacts.py                     # load .pt/vocab/config safely
-│     │     └─ normalizer.py
+│     │     ├─ artifacts.py                     # load config/vocab/checkpoint
+│     │     ├─ normalizer.py                    # text normalization
+│     │     ├─ net.py                           # model architecture
+│     │     └─ utils.py                         # helper functions
 │     │
 │     ├─ artifacts/                             # (Seng coordinate, Virak uses)
 │     │  ├─ checkpoint.pt
