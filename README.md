@@ -5,107 +5,119 @@ End-to-end MLOps system for deploying a Khmer word segmentation (space injection
 
 ```
 khmer-space-injector-mlops/
-├─ apps/
-│  ├─ frontend/                                 # (Rattanak)
-│  │  ├─ public/
-│  │  ├─ src/
-│  │  │  ├─ app/                               # pages/layout (router if used)
-│  │  │  ├─ components/
-│  │  │  ├─ features/
-│  │  │  │  └─ segment/                        # textbox → call API → result
-│  │  │  ├─ lib/
-│  │  │  │  ├─ api.ts                          # typed fetch wrapper
-│  │  │  │  └─ validators.ts                   # max length, basic checks
-│  │  │  ├─ main.tsx
-│  │  │  └─ vite-env.d.ts
-│  │  ├─ tests/
-│  │  │  └─ segment.test.tsx
-│  │  ├─ index.html
-│  │  ├─ package.json
-│  │  ├─ tsconfig.json
-│  │  └─ vite.config.ts
-│  │
-│  └─ api/                                      # (Virak)
-│     ├─ app/
-│     │  ├─ main.py                             # FastAPI entrypoint
-│     │  ├─ api/
-│     │  │  └─ routes/
-│     │  │     ├─ health.py                     # GET /health (api+db check)
-│     │  │     ├─ segment.py                    # POST /api/segment
-│     │  │     └─ records.py                    # GET /api/records (optional)
-│     │  ├─ core/
-│     │  │  ├─ config.py                        # env + paths to artifacts
-│     │  │  └─ logging.py
-│     │  ├─ schemas/
-│     │  │  ├─ segment.py                       # SegmentRequest/Response
-│     │  │  └─ record.py                        # Record schema (db)
-│     │  ├─ models/                             # SQLAlchemy models
-│     │  │  └─ record.py                        # only record table
-│     │  ├─ db/                                 # (Panha)
-│     │  │  ├─ session.py
-│     │  │  └─ repo/
-│     │  │     └─ record_repo.py
-│     │  └─ services/
-│     │     ├─ segmenter.py                     # loads model + inference
-│     │     ├─ artifacts.py                     # load config/vocab/checkpoint
-│     │     ├─ normalizer.py                    # text normalization
-│     │     ├─ net.py                           # model architecture
-│     │     └─ utils.py                         # helper functions
-│     │
-│     ├─ artifacts/                             # (Seng coordinate, Virak uses)
-│     │  ├─ checkpoint.pt
-│     │  ├─ vocab.json
-│     │  └─ config.json
-│     │
-│     ├─ tests/                                 # (Seng lead, Virak supports)
-│     │  ├─ unit/
-│     │  │  ├─ test_artifacts.py                # loading config/vocab
-│     │  │  ├─ test_segmenter.py
-│     │  │  └─ test_normalizer.py
-│     │  ├─ api/
-│     │  │  ├─ test_segment_route.py
-│     │  │  └─ test_health_route.py
-│     │  └─ integration/
-│     │     └─ test_record_repo.py              # write/read record
-│     │
-│     ├─ alembic/                               # (Panha)
-│     ├─ alembic.ini
-│     ├─ requirements.txt
-│     ├─ pyproject.toml
-│     └─ Dockerfile
-│
-├─ packages/
-│  └─ shared/                                   # (Seng)
-│     ├─ constants/
-│     │  ├─ routes.ts                           # "/api/segment", "/health"
-│     │  └─ limits.ts                           # MAX_TEXT_LEN etc.
-│     ├─ types/
-│     │  ├─ segment.ts                          # SegmentRequest/Response types
-│     │  └─ record.ts                           # optional for records endpoint
-│     └─ fixtures/
-│        ├─ khmer_samples.json
-│        └─ expected_segments.json
-│
-├─ infra/                                       # (Seng)
-│  ├─ nginx/
-│  │  └─ default.conf                           # serve FE + proxy /api to FastAPI
-│  ├─ scripts/
-│  │  ├─ provision_vm.sh
-│  │  ├─ deploy.sh
-│  │  └─ db_migrate.sh
-│  ├─ systemd/
-│  │  ├─ fastapi.service
-│  │  └─ nginx.service (optional)
-│  └─ docker-compose.yml
+├─ .env.example
+├─ .gitignore
+├─ LICENSE
+├─ Makefile
+├─ README.md
+├─ package.json
+├─ package-lock.json
 │
 ├─ .github/
-│  └─ workflows/                                # (Seng)
-│     ├─ ci.yml                                 # lint+tests on PR
-│     └─ cd.yml                                 # deploy to GCE on main
+│  ├─ PULL_REQUEST_TEMPLATE.md
+│  └─ workflows/
+│     ├─ cd.yml
+│     └─ ci.yml
 │
-├─ .env.example                                 # (Panha + Seng)
-├─ Makefile                                     # (Seng)
-├─ README.md
-└─ LICENSE
-
-```
+├─ apps/
+│  ├─ api/
+│  │  ├─ Dockerfile
+│  │  ├─ alembic.ini
+│  │  ├─ pyproject.toml
+│  │  ├─ requirements.txt
+│  │  ├─ artifacts/
+│  │  │  ├─ checkpoint.pt
+│  │  │  ├─ config.json
+│  │  │  └─ vocab.json
+│  │  ├─ app/
+│  │  │  ├─ main.py
+│  │  │  ├─ main_state.py
+│  │  │  ├─ api/
+│  │  │  │  ├─ deps.py
+│  │  │  │  └─ routes/
+│  │  │  │     ├─ health.py
+│  │  │  │     ├─ history.py
+│  │  │  │     ├─ metrics.py
+│  │  │  │     ├─ records.py
+│  │  │  │     └─ segment.py
+│  │  │  ├─ core/
+│  │  │  │  ├─ config.py
+│  │  │  │  ├─ logging.py
+│  │  │  │  └─ metrics.py
+│  │  │  ├─ db/
+│  │  │  │  ├─ session.py
+│  │  │  │  └─ repo/
+│  │  │  │     └─ record_repo.py
+│  │  │  ├─ models/
+│  │  │  │  └─ record.py
+│  │  │  ├─ schemas/
+│  │  │  │  ├─ history.py
+│  │  │  │  ├─ record.py
+│  │  │  │  └─ segment.py
+│  │  │  ├─ services/
+│  │  │  │  ├─ artifacts.py
+│  │  │  │  ├─ net.py
+│  │  │  │  ├─ normalizer.py
+│  │  │  │  ├─ segmenter.py
+│  │  │  │  └─ utils.py
+│  │  │  └─ utils/
+│  │  │     └─ time.py
+│  │  └─ tests/
+│  │     ├─ api/
+│  │     │  ├─ conftest.py
+│  │     │  ├─ test_health_route.py
+│  │     │  ├─ test_history_route.py
+│  │     │  └─ test_segment_route.py
+│  │     ├─ integration/
+│  │     │  ├─ test_db_repos.py
+│  │     │  └─ test_record_repo.py
+│  │     └─ unit/
+│  │        ├─ test_artifacts.py
+│  │        ├─ test_normalizer.py
+│  │        └─ test_segmenter.py
+│  │
+│  └─ frontend/
+│     ├─ index.html
+│     ├─ package.json
+│     ├─ package-lock.json
+│     ├─ tsconfig.json
+│     ├─ tsconfig.node.json
+│     ├─ vite.config.ts
+│     └─ src/
+│        ├─ main.tsx
+│        ├─ vite-env.d.ts
+│        ├─ index.css
+│        ├─ app/
+│        │  ├─ App.tsx
+│        │  └─ App.css
+│        └─ features/
+│           ├─ segment/
+│           │  ├─ Segment.tsx
+│           │  ├─ Segment.css
+│           │  └─ segmentApi.ts
+│           └─ history/
+│              ├─ HistoryPage.tsx
+│              ├─ HistoryPage.css
+│              └─ historyApi.ts
+│
+├─ infra/
+│  ├─ nginx/
+│  │  └─ default.conf
+│  ├─ scripts/
+│  │  ├─ db_migrate.sh
+│  │  ├─ deploy.sh
+│  │  └─ provision_vm.sh
+│  └─ systemd/
+│     └─ fastapi.service
+│
+└─ packages/
+   └─ shared/
+      ├─ constants/
+      │  ├─ limits.ts
+      │  └─ routes.ts
+      ├─ types/
+      │  ├─ record.ts
+      │  └─ segment.ts
+      └─ fixtures/
+         ├─ expected_segments.json
+         └─ khmer_samples.json
