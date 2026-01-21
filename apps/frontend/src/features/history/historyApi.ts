@@ -1,3 +1,13 @@
+// src/features/history/historyApi.ts
+
+export type HistoryItem = {
+  id: string;        // keep it string to avoid TS issues
+  input: string;
+  output: string;
+};
+
+const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
 export async function fetchHistory(): Promise<HistoryItem[]> {
   const res = await fetch(`${API_BASE}/api/history`);
 
@@ -7,9 +17,9 @@ export async function fetchHistory(): Promise<HistoryItem[]> {
   }
 
   const data = await res.json();
-
   if (!Array.isArray(data)) return [];
 
+  // map backend keys -> UI keys
   return data.map((r: any) => ({
     id: String(r.id),
     input: r.input_text ?? "",
