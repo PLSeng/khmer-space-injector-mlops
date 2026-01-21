@@ -6,6 +6,7 @@
 # NOTE: On Windows, ensure you have GNU Make installed (e.g., via Git Bash, MSYS2, or Chocolatey).
 
 .PHONY: help api-install deploy
+COMPOSE = docker compose -f infra/docker-compose.yml
 
 help:
 	@echo "Targets:"
@@ -22,11 +23,40 @@ api-install:
 	pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
 	pip install -r ./apps/api/requirements.txt
 
-deploy:
-	docker compose -f infra/docker-compose.yml down
-	docker compose -f infra/docker-compose.yml build --no-cache
-	docker compose -f infra/docker-compose.yml up -d
-	docker compose -f infra/docker-compose.yml ps
+deploy: down build up ps
+
+down:
+	$(COMPOSE) down
+
+build:
+	$(COMPOSE) build --no-cache
+
+up:
+	$(COMPOSE) up -d
+
+ps:
+	$(COMPOSE) ps
+
+logs:
+	$(COMPOSE) logs -f
+
+# First-time SSL issuance (run once)
+ssl:
+	$(COMPOSE) run --rm certbot certonly \
+		--webroot \
+		--webroot-path=/var/www/certbot \
+		-d khmer-space-injector.duckdns.org \
+		--email you@example.com \
+		--agree-tos \
+		--no-eff-email
+
+# Renew SSL certs (safe to run anytime)
+renew:
+	$(COMPOSE) run --rm certbot renew
+	$(COMPOSE) restart nginx
+
+nginx-reload:
+	$(COMPOSE) exec nginx nginx -s reload
 
 provision-vm:
 	@set -eu; \
