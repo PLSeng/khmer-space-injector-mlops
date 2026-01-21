@@ -7,12 +7,12 @@ export default function HistoryPage() {
   const [items, setItems] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => {
     setLoading(true);
     fetchHistory()
       .then((data) => {
-        // Safety check: ensure data is an array
         if (Array.isArray(data)) {
           setItems(data);
         } else {
@@ -30,6 +30,15 @@ export default function HistoryPage() {
         setLoading(false);
       });
   }, []);
+
+  const copyToClipboard = (text: string, id: string) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000); // Reset after 2 seconds
+    }).catch(err => {
+      console.error("Failed to copy:", err);
+    });
+  };
 
   return (
     <div className="history-container">
@@ -61,6 +70,7 @@ export default function HistoryPage() {
               <tr>
                 <th>Input</th>
                 <th>Output</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -68,6 +78,25 @@ export default function HistoryPage() {
                 <tr key={i.id}>
                   <td>{i.input}</td>
                   <td>{i.output}</td>
+                  <td>
+                    <button
+                      className="copy-button"
+                      onClick={() => copyToClipboard(i.output, i.id)}
+                      title="Copy output"
+                    >
+                      {copiedId === i.id ? (
+                        <>
+                          <span className="copy-icon">✓</span>
+                          <span className="copy-text">Copied!</span>
+                        </>
+                      ) : (
+                        <>
+                          <span className="copy-icon">📋</span>
+                          <span className="copy-text">Copy</span>
+                        </>
+                      )}
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

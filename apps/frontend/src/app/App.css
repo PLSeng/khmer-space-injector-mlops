@@ -231,3 +231,79 @@ h3 {
     width: 100%;
   }
 }
+/* History Toggle Button */
+.history-button-container {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+  margin-top: 1rem;
+}
+
+.history-toggle-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  font-family: inherit;
+}
+
+.history-toggle-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, #7c8ef5 0%, #8659b0 100%);
+}
+
+.history-toggle-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.history-toggle-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.4);
+}
+
+.history-icon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.history-section {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .history-button-container {
+    padding: 1.5rem;
+  }
+
+  .history-toggle-button {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .history-icon {
+    font-size: 1.2rem;
+  }
+}
