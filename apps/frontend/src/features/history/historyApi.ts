@@ -9,7 +9,7 @@ export type HistoryItem = {
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
 
 export async function fetchHistory(): Promise<HistoryItem[]> {
-  const res = await fetch(`${API_BASE}/api/history`);
+  const res = await fetch(`${API_BASE}/api/history?limit=5`);
 
   if (!res.ok) {
     const msg = await res.text().catch(() => "");
