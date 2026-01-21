@@ -5,8 +5,9 @@
 #
 # NOTE: On Windows, ensure you have GNU Make installed (e.g., via Git Bash, MSYS2, or Chocolatey).
 
+COMPOSE = docker compose -f $(CURDIR)/infra/docker-compose.yml
 .PHONY: help api-install deploy
-COMPOSE = docker compose -f infra/docker-compose.yml
+
 
 help:
 	@echo "Targets:"
