@@ -81,7 +81,7 @@ export default function HistoryPage() {
                   <td>
                     <button
                       className="copy-button"
-                      onClick={() => copyToClipboard(i.output, i.id)}
+                      onClick={() => copyToClipboard(i.output, String(i.id))}
                       title="Copy output"
                     >
                       {copiedId === i.id ? (
