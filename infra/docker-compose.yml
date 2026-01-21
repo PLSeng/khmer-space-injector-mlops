@@ -1,3 +1,6 @@
+cat > infra/docker-compose.yml <<'EOF'
+version: "3.8"
+
 services:
   api:
     build:
@@ -38,3 +41,7 @@ services:
     volumes:
       - ./certbot/www:/var/www/certbot
       - ./certbot/conf:/etc/letsencrypt
+
+volumes:
+  frontend_dist:
+EOF
